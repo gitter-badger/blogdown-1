@@ -10,3 +10,8 @@ dependencies:
     - npm install -g bower
     - npm install
     - bower install
+
+## Customize test commands
+test:
+  override:
+    - gulp
