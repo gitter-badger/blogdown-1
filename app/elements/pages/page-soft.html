@@ -3,21 +3,27 @@
 <dom-module id="page-soft">
   <template>
     
-    <paper-card heading="[[page.title]]">
-      <div class="card-content">
-        <template is="dom-if" if="[[isMD]]">
+    <paper-card heading="[[page.title]]" class="fullbleed">
+      <template is="dom-if" if="[[isMD]]" restamp>
+        <div class="card-content">
           <juicy-markdown value="[[pageResponseData]]"></juicy-markdown>
-        </template>
-        <template is="dom-if" if="[[isHTML]]">
+        </div>
+      </template>
+      <template is="dom-if" if="[[isHTML]]" restamp>
+        <div class="card-content">
           <template is="juicy-html" content$="[[pageResponseData]]"></template>
-        </template>
-        <template is="dom-if" if="[[isPDF]]">
-          <div>This is a pdf</div>
-        </template>
-      </div>
+        </div>
+      </template>
+      <template is="dom-if" if="[[isPDF]]" restamp>
+        <div class="card-content">
+          <pdf-object file="[[pageUrl]]" height="400px"></pdf-object>
+        </div>
+        <div class="card-actions">
+          <paper-button on-click="_download">Download</paper-button>
+        </div>
+      </template>
     </paper-card>
     
-    <!-- Load soft page -->
     <iron-ajax id="page"
       url="[[pageUrl]]"
       handle-as="text"
@@ -46,10 +52,24 @@
         
         _pageChanged: function() {
           this.pageUrl = '../../pages/' + this.page.slug + '.' + this.page.format;
-          this.$.page.generateRequest();
+          if (this.page.format === 'md' || this.page.format === 'html') {
+            this.$.page.generateRequest();
+          } else {
+            this._loadPage();
+          }
         },
         
         pageResponse: function() {
+          this._loadPage();
+        },
+        
+        pageError: function() {
+          var error = 'Error 2: ' + this.page.slug + '.' + this.page.format + ' failed to load';
+          app.debug(error, 'warn');
+          app.toast(error, 'http://blogdown.info/error/2', '_blank');
+        },
+        
+        _loadPage: function() {
           switch (this.page.format) {
             case 'md':
               this.isMD = true;
@@ -70,10 +90,8 @@
           app.debug(this.page.slug + '.' + this.page.format + ' loaded');
         },
         
-        pageError: function() {
-          var error = 'Error 2: ' + this.page.slug + '.' + this.page.format + ' failed to load';
-          app.debug(error, 'warn');
-          app.toast(error, 'http://blogdown.info/error/2', '_blank');
+        _download: function() {
+          window.open(this.pageUrl);
         }
       });
     })();

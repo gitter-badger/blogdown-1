@@ -1,0 +1,44 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+
+<dom-module id="pdf-object">
+  <template>
+    
+    <object data="[[file]]"
+      type="application/pdf"
+      width="[[width]]"
+      height="[[height]]"
+    >
+      <p>
+        It appears your Web browser is not configured to display PDF files.
+        No worries, just <a href="[[file]]">
+        click here to download the PDF file.</a>
+      </p>
+    </object>
+
+  </template>
+
+  <script>
+    (function() {
+      'use strict';
+      Polymer({
+        is: 'pdf-object',
+        
+        properties: {
+          file: {
+            type: String,
+            value: 'http://www.polyu.edu.hk/iaee/files/pdf-sample.pdf'
+          },
+          height: {
+            type: String,
+            value: '100%'
+          },
+          width: {
+            type: String,
+            value: '100%'
+          }
+        }
+      });
+    })();
+  </script>
+
+</dom-module>
