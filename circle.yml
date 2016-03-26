@@ -15,9 +15,3 @@ dependencies:
 test:
   override:
     - gulp
-
-deployment:
-  prod:
-    branch: master
-    commands:
-      
