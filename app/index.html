@@ -78,11 +78,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     <template is="dom-if" if="[[loaded]]" restamp>
       <root-page id="rootPage"
-      mobile="{{mobile}}"
-      loading="[[loading]]"
-      progress="[[progress]]"
-      page-title="[[pageTitle]]"
-    ></root-page>
+        mobile="{{mobile}}"
+        loading="[[loading]]"
+        progress="[[progress]]"
+        page-title="[[pageTitle]]"
+      ></root-page>
     </template>
 
     <paper-toast id="toast" text="[[message]]" duration="[[settings.toastDuration]]" on-click="toastClicked"></paper-toast>

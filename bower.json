@@ -11,7 +11,8 @@
     "fa-awesome": "^2.0.2",
     "juicy-markdown": "^1.0.0",
     "excess-router": "^0.9.13",
-    "juicy-html": "^1.1.0"
+    "juicy-html": "^1.1.0",
+    "pdf-object": "^1.0.0"
   },
   "devDependencies": {
     "web-component-tester": "^4.0.0"
