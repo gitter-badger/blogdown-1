@@ -86,12 +86,6 @@
             this.$.drawer.closeDrawer();
           }.bind(this));
         },
-        
-        attached: function() {
-          window.setTimeout(function() {
-            this.$.serviceRouting.initializePage();
-          }.bind(this), 5000);
-        },
 
         _goToPage: function(e) {
           var model = e.model;

@@ -112,6 +112,8 @@
         },
 
         _loaded: function() {
+          var event = new Event('application-loaded');
+          window.dispatchEvent(event);
           app.loaded = true;
           app.debug(app.settings.title + ' loaded');
         }

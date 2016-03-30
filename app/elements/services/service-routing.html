@@ -43,6 +43,20 @@
       Polymer({
         is: 'service-routing',
         
+        properties: {
+          _attached: {
+            type: Boolean,
+            value: false
+          }
+        },
+        
+        attached: function() {
+          if (!this._attached) {
+            this._attached = true;
+            this.initializePage();
+          }
+        },
+        
         _homePropertiesChanged: function() {
           app.goTo('/home');
         },
@@ -58,8 +72,8 @@
         },
         
         initializePage: function() {
-          var validPage = false;
-          if (app.loaded) {
+          if (this._attached) {
+            var validPage = false;
             if (this.routeType === 'page') { // Page route
               for (var i = 0; i < app.pages.length; i++) {
                 if (this.pageSlug === app.pages[i].slug) {
