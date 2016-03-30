@@ -2,7 +2,16 @@
 
 <dom-module id="page-posts">
   <template>
-    <span>This page contains a list of posts</span>
+    <template is="dom-repeat" items="[[posts]]" as="post">
+      <paper-card heading="[[post.title]]">
+        <div class="card-content">
+          <!-- Post summary here -->
+        </div>
+        <div class="card-actions">
+          <paper-button on-click="_goToPost">Read More</paper-button>
+        </div>
+      </paper-card>
+    </template>
   </template>
 
   <script>
@@ -12,7 +21,12 @@
         is: 'page-posts',
 
         ready: function() {
-
+          this.set('posts', app.posts);
+        },
+        
+        _goToPost: function(e) {
+          var post = e.model.post;
+          app.goTo('/post/' + post.slug);
         }
       });
     })();
