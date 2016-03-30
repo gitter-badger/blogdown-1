@@ -44,19 +44,19 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <meta name="msapplication-TileImage" content="images/touch/ms-touch-icon-144x144-precomposed.png">
 
   <!-- build:css styles/main.css -->
-  <link rel="stylesheet" href="styles/main.css">
+  <link rel="stylesheet" href="../styles/main.css">
   <!-- endbuild-->
 
   <!-- build:js bower_components/webcomponentsjs/webcomponents-lite.min.js -->
-  <script src="bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+  <script src="../bower_components/webcomponentsjs/webcomponents-lite.js"></script>
   <!-- endbuild -->
 
   <!-- Because this project uses vulcanize this should be your only html import
        in this file. All other imports should go in elements.html -->
-  <link rel="import" href="elements/elements.html">
+  <link rel="import" href="../elements/elements.html">
 
   <!-- Import style -->
-  <script src="scripts/styleImport.js"></script>
+  <script src="../scripts/preliminary.js"></script>
 
   <!-- For shared styles, shared-styles.html import in elements.html -->
   <style is="custom-style" include="shared-styles"></style>
@@ -69,7 +69,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <!-- Load the app -->
     <span id="loading"></span>
     <iron-ajax id="settings" auto
-      url="json/settings.json"
+      url="../json/settings.json"
       handle-as="json"
       on-response="settingsResponse"
       on-error="settingsError"
@@ -109,7 +109,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   </template>
 
   <!-- build:js scripts/app.js -->
-  <script src="scripts/app.js"></script>
+  <script src="../scripts/app.js"></script>
   <!-- endbuild-->
 </body>
 
