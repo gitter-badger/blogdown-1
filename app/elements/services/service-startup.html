@@ -68,7 +68,24 @@
 
         postsResponse: function() {
           if (this.postsResponseData) {
-            app.posts = this.postsResponseData;
+            this.posts = [];
+            var posts = this.postsResponseData;
+            for (var i = 0; i < posts.length; i++) {
+//            var slug = posts[i].title.toLowerCase().replace(/[^\s\w+\-_#.]/g, '').replace(/\s+/g, '-');
+              var format = 'md';
+              if (posts[i].format) {
+                format = posts[i].format;
+              }
+              var post = {
+                title: posts[i].title,
+                datestamp: posts[i].datestamp,
+                author: posts[i].author,
+                slug: posts[i].datestamp,
+                format: format
+              };
+              this.push('posts', post);
+            }
+            app.posts = this.posts;
           } else {
             var error = 'Error 2: SyntaxError in posts.json';
             app.toast(error);

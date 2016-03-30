@@ -2,7 +2,36 @@
 
 <dom-module id="page-post">
   <template>
-    <span>This page contains a post</span>
+    
+    <paper-card heading="[[post.title]]">
+      <template is="dom-if" if="[[isMD]]" restamp>
+        <div class="card-content">
+          <juicy-markdown value="[[postResponseData]]"></juicy-markdown>
+        </div>
+      </template>
+      <template is="dom-if" if="[[isHTML]]" restamp>
+        <div class="card-content">
+          <template is="juicy-html" content$="[[postResponseData]]"></template>
+        </div>
+      </template>
+      <template is="dom-if" if="[[isPDF]]" restamp>
+        <div class="card-content">
+          <pdf-object file="[[postUrl]]" height="400px"></pdf-object>
+        </div>
+        <div class="card-actions">
+          <paper-button on-click="_download">Fullscreen</paper-button>
+        </div>
+      </template>
+    </paper-card>
+    
+    <iron-ajax id="post"
+      url="[[postUrl]]"
+      handle-as="text"
+      on-response="postResponse"
+      on-error="postError"
+      last-response="{{postResponseData}}"
+    ></iron-ajax>
+    
   </template>
 
   <script>
@@ -10,12 +39,59 @@
       'use strict';
       Polymer({
         is: 'page-post',
-
+        
         properties: {
+          postResponseData: {
+            type: String
+          },
+          post: {
+            type: Object,
+            observer: '_postChanged'
+          }
         },
-
-        ready: function() {
-          this.restamp();
+        
+        _postChanged: function() {
+          this.postUrl = '../../posts/' + this.post.slug + '.' + this.post.format;
+          if (this.post.format === 'md' || this.post.format === 'html') {
+            this.$.post.generateRequest();
+          } else {
+            this._loadPost();
+          }
+        },
+        
+        postResponse: function() {
+          this._loadPost();
+        },
+        
+        postError: function() {
+          var error = 'Error 2: ' + this.post.slug + '.' + this.post.format + ' failed to load';
+          app.debug(error, 'warn');
+          app.toast(error, 'http://blogdown.info/error/2', '_blank');
+        },
+        
+        _loadPost: function() {
+          switch (this.post.format) {
+            case 'md':
+              this.isMD = true;
+              this.isHTML = false;
+              this.isPDF = false;
+              break;
+            case 'html':
+              this.isMD = false;
+              this.isHTML = true;
+              this.isPDF = false;
+              break;
+            case 'pdf':
+              this.isMD = false;
+              this.isHTML = false;
+              this.isPDF = true;
+              break;
+          }
+          app.debug(this.post.slug + '.' + this.post.format + ' loaded');
+        },
+        
+        _download: function() {
+          window.open(this.postUrl);
         }
       });
     })();

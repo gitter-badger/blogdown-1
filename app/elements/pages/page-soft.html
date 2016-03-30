@@ -3,7 +3,7 @@
 <dom-module id="page-soft">
   <template>
     
-    <paper-card heading="[[page.title]]" class="fullbleed">
+    <paper-card heading="[[page.title]]">
       <template is="dom-if" if="[[isMD]]" restamp>
         <div class="card-content">
           <juicy-markdown value="[[pageResponseData]]"></juicy-markdown>

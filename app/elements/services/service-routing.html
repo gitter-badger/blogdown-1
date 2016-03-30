@@ -3,11 +3,11 @@
 <dom-module id="service-routing">
   <template>
     
-    <excess-route route="/" on-excess-route-will-activate="_homeRouteActivated"></excess-route>
-    <excess-route route="/:page" page="{{pageSlug}}" on-excess-route-will-activate="_pageRouteActivated"></excess-route>
-    <excess-route route="/:page/" page="{{pageSlug}}" on-excess-route-will-activate="_pageRouteActivated"></excess-route>
-    <excess-route route="/post/:post" post="{{postSlug}}" on-excess-route-will-activate="_postsRouteActivated"></excess-route>
-    <excess-route route="/post/:post/" post="{{postSlug}}" on-excess-route-will-activate="_postsRouteActivated"></excess-route>
+    <excess-route route="/" on-properties-changed="_homePropertiesChanged"></excess-route>
+    <excess-route route="/:page" page="{{pageSlug}}" on-properties-changed="_pagePropertiesChanged"></excess-route>
+    <excess-route route="/:page/" page="{{pageSlug}}" on-properties-changed="_pagePropertiesChanged"></excess-route>
+    <excess-route route="/:page/:child" page="{{pageSlug}}" child="{{childSlug}}" on-properties-changed="_childPropertiesChanged"></excess-route>
+    <excess-route route="/:page/:child/" page="{{pageSlug}}" child="{{childSlug}}" on-properties-changed="_childPropertiesChanged"></excess-route>
     
     <!-- Hard pages -->
     <restamp-page route-type="page" current-routetype="[[routeType]]" slug="home" current-slug="[[pageSlug]]" page-type="hard" current-pagetype="[[pageType]]">
@@ -43,44 +43,24 @@
       Polymer({
         is: 'service-routing',
         
-        properties: {
-          pageSlug: {
-            type: String,
-            observer: '_slugChanged'
-          },
-          postSlug: {
-            type: String,
-            observer: '_slugChanged'
-          }
-        },
-
-        ready: function() {
-
+        _homePropertiesChanged: function() {
+          app.goTo('/home');
         },
         
-        _homeRouteActivated: function() {
+        _pagePropertiesChanged: function() {
           this.set('routeType', 'page');
-          this.set('pageSlug', 'home');
+          this.initializePage();
         },
         
-        _pageRouteActivated: function() {
-          this.set('routeType', 'page');
-        },
-        
-        _postsRouteActivated: function() {
-          this.set('routeType', 'post');
-        },
-        
-        _slugChanged: function() {
+        _childPropertiesChanged: function() {
+          this.set('routeType', 'child');
           this.initializePage();
         },
         
         initializePage: function() {
           var validPage = false;
           if (app.loaded) {
-            if (this.routeType === 'home') { // Home route
-              validPage = true;
-            } else if (this.routeType === 'page') { // Page route
+            if (this.routeType === 'page') { // Page route
               for (var i = 0; i < app.pages.length; i++) {
                 if (this.pageSlug === app.pages[i].slug) {
                   if (app.pages[i].type === 'hard') { // Hard page
@@ -93,8 +73,16 @@
                   break;
                 }
               }
-            } else if (this.routeType ==='post') { // Posts route
-              validPage = true;
+            } else if (this.routeType === 'child') { // Posts route
+              this.routeType = this.pageSlug;
+              if (this.routeType === 'post') { // Posts route
+                for (var i = 0; i < app.posts.length; i++) {
+                  if (String(app.posts[i].slug) === this.childSlug) {
+                    this.post = app.posts[i];
+                    validPage = true;
+                  }
+                }
+              }
             } else {
               app.debug('routeType not specified', 'warn');
             }

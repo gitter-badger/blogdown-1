@@ -88,7 +88,9 @@
         },
         
         attached: function() {
-          this.$.serviceRouting.initializePage();
+          window.setTimeout(function() {
+            this.$.serviceRouting.initializePage();
+          }.bind(this), 5000);
         },
 
         _goToPage: function(e) {
