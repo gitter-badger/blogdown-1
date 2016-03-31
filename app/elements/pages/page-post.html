@@ -28,11 +28,6 @@
     <template is="dom-if" if="[[enableDisqus]]">
       <paper-card heading="Commenting">
         <div class="card-content">
-          <span>[[disqusShortname]]</span>
-          <span>[[post.datestamp]]</span>
-          <span>[[post.title]]</span>
-          <span>[[url]]</span>
-          <span>[[categoryId]]</span>
           <service-disqus
             shortname="[[disqusShortname]]"
             identifier="[[post.datestamp]]"
