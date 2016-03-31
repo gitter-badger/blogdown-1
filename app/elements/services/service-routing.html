@@ -62,18 +62,16 @@
         },
         
         _pagePropertiesChanged: function() {
-          app.hashId = this._checkForHashId(); // _checkForHashId() may redirect page
-          app.parameters = this._checkForParameters(); // _checkForParameters() may redirect page
-          if (app.hashId === '' || app.parameters.length > 0) {
+          if (this._checkForHashId() === '' || // _checkForHashId() may redirect page
+            this._checkForParameters().length > 0) { // _checkForParameters() may redirect page
             this.set('routeType', 'page');
             this.initializePage();
           }
         },
         
         _childPropertiesChanged: function() {
-          app.hashId = this._checkForHashId(); // _checkForHashId() may redirect page
-          app.parameters = this._checkForParameters(); // _checkForParameters() may redirect page
-          if (app.hashId === '' || app.parameters.length > 0) {
+          if (this._checkForHashId() === '' || // _checkForHashId() may redirect page
+            this._checkForParameters().length > 0) { // _checkForParameters() may redirect page
             this.set('routeType', 'child');
             this.initializePage();
           }
@@ -88,7 +86,9 @@
               hashes++;
               if (hashes > 1) { // If hash id added to end of url
                 hashId = url.substring(i + 1, url.length);
+                app.set('hashId', hashId);
                 app.goTo(url.substring(url.indexOf('#') + 1, i));
+                app.debug('app.hashId: ' + app.hashId);
               }
             }
           }
@@ -139,11 +139,17 @@
             }
             app.goTo(url.substring(url.indexOf('#') + 1, location));
           }
+          if (parameters.length > 0) {
+            app.set('parameters', parameters);
+            app.debug('app.parameters:');
+            app.debug(app.parameters);
+          }
           return parameters;
         },
         
         initializePage: function() {
-          if (this._attached) {
+          if (this._attached && (this.previousPageSlug !== this.pageSlug || // Prevents restamping before page is attached
+            this.previousChildSlug !== this.childSlug)) { // Prevents restamping of the current page
             var validPage = false;
             if (this.routeType === 'page') { // Page route
               for (var i = 0; i < app.pages.length; i++) {
@@ -172,6 +178,8 @@
               app.debug('routeType not specified', 'warn');
             }
             if (validPage) {
+              this.set('previousPageSlug', this.pageSlug);
+              this.set('previousChildSlug', this.childSlug);
               this.restampPages();
             } else { // Page does not exist
               if (app.firstPage) {
