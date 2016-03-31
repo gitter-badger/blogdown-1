@@ -25,20 +25,22 @@
     </paper-card>
     
     <!-- Disqus commenting -->
-    <template is="dom-if" if="[[enableDisqus]]">
-      <paper-card heading="Commenting">
-        <div class="card-content">
-          <service-disqus
-            shortname="[[disqusShortname]]"
-            identifier="[[post.datestamp]]"
-            title="[[post.title]]"
-            url="[[url]]"
-            categoryId="[[categoryId]]"
-            https=false
-          ></service-disqus>
-        </div>
-      </paper-card>
-    </template>
+    <div id="disqus">
+      <template is="dom-if" if="[[enableDisqus]]">
+        <paper-card heading="Commenting">
+          <div class="card-content">
+            <service-disqus
+              shortname="[[disqusShortname]]"
+              identifier="[[post.datestamp]]"
+              title="[[post.title]]"
+              url="[[url]]"
+              categoryId="[[categoryId]]"
+              https=false
+            ></service-disqus>
+          </div>
+        </paper-card>
+      </template>
+    </div>
     
     <iron-ajax id="post"
       url="[[postUrl]]"
@@ -64,6 +66,12 @@
             type: Object,
             observer: '_postChanged'
           }
+        },
+        
+        attached: function() {
+          app.addEventListener('hash-id', function() {
+            this._checkForHashId();
+          }.bind(this));
         },
         
         _postChanged: function() {
@@ -109,10 +117,23 @@
         },
         
         _loadDisqus: function() {
-          this.set('disqusShortname', app.settings.disqusShortname);
-          this.set('url', window.location.href.replace('/#', ''));
-          this.set('categoryId', 'cats');
-          this.set('enableDisqus', true);
+          if (app.settings.disqusShortname) {
+            this.set('disqusShortname', app.settings.disqusShortname);
+            this.set('url', window.location.href.replace('/#', ''));
+            this.set('categoryId', '');
+            this.set('enableDisqus', true);
+            window.setTimeout(function() { /* ! this can be implemented better */
+              this._checkForHashId(); // check for hash id here becuase hash-id event has already fired
+            }.bind(this), 1000);
+          }
+        },
+        
+        _checkForHashId: function() {
+          if (app.hashId && this.enableDisqus) { // if #comment, scroll to comment section
+            if (app.hashId.indexOf('comment') >= 0) {
+              this.$.disqus.scrollIntoView();
+            }
+          }
         },
         
         _download: function() {

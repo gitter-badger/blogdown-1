@@ -85,10 +85,12 @@
             if (url[i] === '#') {
               hashes++;
               if (hashes > 1) { // If hash id added to end of url
+                var event = new Event('hash-id');
                 hashId = url.substring(i + 1, url.length);
                 app.set('hashId', hashId);
                 app.goTo(url.substring(url.indexOf('#') + 1, i));
                 app.debug('app.hashId: ' + app.hashId);
+                app.dispatchEvent(event);
               }
             }
           }
@@ -140,9 +142,11 @@
             app.goTo(url.substring(url.indexOf('#') + 1, location));
           }
           if (parameters.length > 0) {
+            var event = new Event('parameters');
             app.set('parameters', parameters);
             app.debug('app.parameters:');
             app.debug(app.parameters);
+            app.dispatchEvent(event);
           }
           return parameters;
         },
