@@ -24,6 +24,27 @@
       </template>
     </paper-card>
     
+    <!-- Disqus commenting -->
+    <template is="dom-if" if="[[enableDisqus]]">
+      <paper-card heading="Commenting">
+        <div class="card-content">
+          <span>[[disqusShortname]]</span>
+          <span>[[post.datestamp]]</span>
+          <span>[[post.title]]</span>
+          <span>[[url]]</span>
+          <span>[[categoryId]]</span>
+          <service-disqus
+            shortname="[[disqusShortname]]"
+            identifier="[[post.datestamp]]"
+            title="[[post.title]]"
+            url="[[url]]"
+            categoryId="[[categoryId]]"
+            https=false
+          ></service-disqus>
+        </div>
+      </paper-card>
+    </template>
+    
     <iron-ajax id="post"
       url="[[postUrl]]"
       handle-as="text"
@@ -51,6 +72,7 @@
         },
         
         _postChanged: function() {
+          this.set('enableDisqus', false);
           this.postUrl = '../../posts/' + this.post.slug + '.' + this.post.format;
           if (this.post.format === 'md' || this.post.format === 'html') {
             this.$.post.generateRequest();
@@ -87,7 +109,15 @@
               this.isPDF = true;
               break;
           }
+          this._loadDisqus();
           app.debug(this.post.slug + '.' + this.post.format + ' loaded');
+        },
+        
+        _loadDisqus: function() {
+          this.set('disqusShortname', app.settings.disqusShortname);
+          this.set('url', window.location.href.replace('/#', ''));
+          this.set('categoryId', 'cats');
+          this.set('enableDisqus', true);
         },
         
         _download: function() {
