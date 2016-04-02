@@ -55,8 +55,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
        in this file. All other imports should go in elements.html -->
   <link rel="import" href="elements/elements.html">
   
-  <!-- Import style -->
-  <script src="../../scripts/preliminary.js"></script>
+  <!-- Import preliminary.js (This script runs before Polymer is loaded) -->
+  <script src="../../../scripts/preliminary.js"></script>
 
   <!-- For shared styles, shared-styles.html import in elements.html -->
   <style is="custom-style" include="shared-styles"></style>
@@ -85,7 +85,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         loading="[[loading]]"
         progress="[[progress]]"
         page-title="[[pageTitle]]"
-        route="[[route]]"
         route-data="[[routeData]]">
       </initialize-theme>
     </template>

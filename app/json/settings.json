@@ -34,6 +34,9 @@
     }, {
       "title": "Contact",
       "addToMenu": true
+    }, {
+      "title": "Search",
+      "addToMenu": true
     }
   ],
   "disqusShortname": "jamrizzi"

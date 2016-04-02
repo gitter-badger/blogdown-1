@@ -4,27 +4,31 @@
   <template>
 
     <iron-pages attr-for-selected="route" selected="[[route]]">
-      <section route="home" tabindex="-1">
+      <section route="home">
          <page-home></page-home>
       </section>
       
-      <section route="posts" tabindex="-1">
+      <section route="posts">
         <page-posts></page-posts>
       </section>
+      
+      <section route="search">
+        <page-search></page-search>
+      </section>
 
-      <section route="contact" tabindex="-1">
+      <section route="contact">
         <page-contact></page-contact>
       </section>
       
-      <section route="404" tabindex="-1">
+      <section route="404">
         <page-404></page-404>
       </section>
       
-      <section route="soft" tabindex="-1">
+      <section route="soft">
         <page-soft page="[[softPage]]"></page-soft>
       </section>
 
-      <section route="post" tabindex="-1">
+      <section route="post">
        <page-post post="[[post]]"></page-post>
       </section>
     </iron-pages>
