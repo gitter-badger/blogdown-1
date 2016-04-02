@@ -45,20 +45,96 @@
         },
         
         routeChanged: function() {
-          switch (this.routeData.type) {
-            case 'home':
-              this._homeRoute();
-              break;
-            case 'page':
-              this._pageRoute();
-              break;
-            case 'child':
-              this._childRoute();
-              break;
-            default:
-              this._404Route();
-              break;
+          var hashId = this._checkForHashId();
+          if (hashId !== '') { // strips hashId from route
+            app.set('hashId', hashId);
+            app.debug('app.hashId = ' + app.hashId);
+          } else {
+            var parameters = this._checkForParameters();
+            if (parameters.length > 0) { // strips parameters from route
+              app.set('parameters', parameters);
+              app.debug('app.parameters =');
+              app.debug(app.parameters);
+            } else { // route is clean from hashes and parameters
+              switch (this.routeData.type) {
+                case 'home':
+                  this._homeRoute();
+                  break;
+                case 'page':
+                  this._pageRoute();
+                  break;
+                case 'child':
+                  this._childRoute();
+                  break;
+                default:
+                  this._404Route();
+                  break;
+              }
+            }
           }
+        },
+
+        _checkForHashId: function() {
+          var hashId = '';
+          var url = window.location.href;
+          var hashes = 0;
+          for (var i = 0; i < url.length; i++) {
+            if (url[i] === '#') {
+              hashes++;
+              if (hashes > 1) { // If hash id added to end of url
+                hashId = url.substring(i + 1, url.length);
+                app.goTo(url.substring(url.indexOf('#') + 2, i));
+              }
+            }
+          }
+          return hashId;
+        },
+        
+        _checkForParameters: function() {
+          var parameters = [];
+          var url = window.location.href;
+          var location = url.indexOf('?');
+          if (location > 0) {
+            var paramString = url.substring(location + 1, url.length);
+            var name = '';
+            var value = '';
+            var mode = 'name'
+            for (var i = 0; i <= paramString.length; i++) {
+              if (i < paramString.length) {
+                if (mode === 'name') { // Parse name
+                  if (paramString[i] !== '=') {
+                    name = name + paramString[i];
+                  } else {
+                    mode = 'value';
+                    continue;
+                  }
+                } else { // Parse value
+                  if (paramString[i] !== '&') {
+                    value = value + paramString[i];
+                  } else {
+                    var parameter = {
+                      name: name,
+                      value: value
+                    };
+                    parameters.push(parameter);
+                    name = '';
+                    value = '';
+                    mode = 'name';
+                  }
+                }
+              } else { // Add last parameter to list
+                if (name !== '') {
+                  var parameter = {
+                    name: name,
+                    value: value
+                  };
+                  parameters.push(parameter);
+                }
+              }
+            }
+            app.goTo(url.substring(url.indexOf('#') + 2, location));
+          }
+          return parameters;
         },
         
         _homeRoute: function() {

@@ -25,3 +25,7 @@ paper-card {
 .content {
   padding: 20px 20px 0px 20px;
 }
+
+.title { /* Hack to fix title from being chopped off */
+	line-height: normal !important;
+}
