@@ -1,4 +1,4 @@
-forceHash();
+//forceHash();
 importStyle();
 
 function forceHash() {

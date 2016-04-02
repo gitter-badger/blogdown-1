@@ -1,6 +1,6 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 
-<dom-module id="root-page">
+<dom-module id="initialize-theme">
   <template>
 
     <theme-drawer
@@ -8,7 +8,9 @@
       loading="[[loading]]"
       progress="[[progress]]"
       page-title="[[pageTitle]]"
-    ></theme-drawer>
+      route="[[route]]"
+      route-data="[[routeData]]">
+    </theme-drawer>
 
   </template>
 
@@ -16,7 +18,7 @@
     (function() {
       'use strict';
       Polymer({
-        is: 'root-page',
+        is: 'initialize-theme',
         
         properties: {
           mobile: {

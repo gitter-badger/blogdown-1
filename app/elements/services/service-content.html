@@ -1,0 +1,114 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+
+<dom-module id="service-content">
+  <template>
+
+    <iron-pages attr-for-selected="route" selected="[[route]]">
+      <section route="home" tabindex="-1">
+         <page-home></page-home>
+      </section>
+      
+      <section route="posts" tabindex="-1">
+        <page-posts></page-posts>
+      </section>
+
+      <section route="contact" tabindex="-1">
+        <page-contact></page-contact>
+      </section>
+      
+      <section route="404" tabindex="-1">
+        <page-404></page-404>
+      </section>
+      
+      <section route="soft" tabindex="-1">
+        <page-soft page="[[softPage]]"></page-soft>
+      </section>
+
+      <section route="post" tabindex="-1">
+        <page-post post="[[post]]"></page-post>
+      </section>
+    </iron-pages>
+    
+  </template>
+
+  <script>
+    (function() {
+      'use strict';
+      Polymer({
+        is: 'service-content',
+        
+        properties: {
+          routeData: {
+            type: Object,
+            observer: 'routeChanged'
+          }
+        },
+        
+        routeChanged: function() {
+          switch (this.routeData.type) {
+            case 'home':
+              this._homeRoute();
+              break;
+            case 'page':
+              this._pageRoute();
+              break;
+            case 'child':
+              this._childRoute();
+              break;
+            default:
+              this._404Route();
+              break;
+          }
+        },
+        
+        _homeRoute: function() {
+          this.set('route', 'home');
+          this._loadElement('home');
+        },
+        
+        _pageRoute: function() {
+          for (var i = 0; i < app.pages.length; i++) {
+            if (this.routeData.slugs.page === app.pages[i].slug) {
+              if (app.pages[i].type === 'hard') { // Hard page
+                this.set('route', this.routeData.slugs.page);
+                this._loadElement(this.routeData.slugs.page);
+              } else { // Soft page
+                this.set('softPage', app.pages[i]);
+                this.set('route', 'soft');
+                this._loadElement('soft');
+              }
+              break;
+            }
+          }
+        },
+        
+        _childRoute: function() {
+          if (this.routeData.slugs.page === 'post') { // Posts route
+            for (var i = 0; i < app.posts.length; i++) {
+              if (this.routeData.slugs.child === String(app.posts[i].slug)) {
+                this.set('post', app.posts[i]);
+                this.set('route', this.routeData.slugs.page);
+                this._loadElement(this.routeData.slugs.page);
+              }
+            }
+          }
+        },
+        
+        _404Route: function() {
+          this.set('route', '404');
+        },
+        
+        _loadElement: function(name) {
+          this.importHref('../elements/pages/page-' + name + '.html', function() {
+            app.debug('page-' + name + '.html was imported.');
+          }.bind(this), function() {
+              window.history.back();
+              app.debug('WARNING: page-' + name + '.html import failed to load');
+              app.toast('WARNING: page-' + name + '.html import failed to load');
+          }.bind(this));
+        }
+      });
+    })();
+  </script>
+
+</dom-module>

@@ -13,19 +13,15 @@ body {
   color: #333;
 }
 
-.content {
-  padding: 20px 20px 0px 20px
+.page-title {
+  outline: none;
 }
 
 paper-card {
-  width:100%;
+  width: 100%;
   margin-bottom: 20px;
 }
 
-.title { /* Hack to fix title from being chopped off */
-	line-height: normal !important;
-}
-
-paper-progress {
-	width: 100%;
+.content {
+  padding: 20px 20px 0px 20px;
 }
