@@ -55,7 +55,7 @@
               app.set('parameters', parameters);
               app.debug('app.parameters =');
               app.debug(app.parameters);
-            } else { // route is clean from hashes and parameters
+            } else if (this.routeData.slugs[0] !== this.previousRoute) { // route is new and is clean from hashes and parameters
               switch (this.routeData.type) {
                 case 'home':
                   this._homeRoute();
@@ -70,6 +70,7 @@
                   this._404Route();
                   break;
               }
+              this.set('previousRoute', this.routeData.slugs[0]);
             }
           }
         },

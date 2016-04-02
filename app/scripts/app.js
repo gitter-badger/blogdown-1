@@ -14,28 +14,35 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   // and give it some initial binding values
   // Learn more about auto-binding templates at http://goo.gl/Dx1u2g
   var app = document.querySelector('#app');
-  
-  /*************************************/
-  
-  
-  
-  
-  // Load settings
+
+  // Load settings (runs before app._loadTheApp)
   app.settingsResponse = function() {
+    var isObjectArray = function(a) {
+        return (!!a) && ((a.constructor === Array) || (a.constructor === Object));
+    };
     for (var setting in app.settings) {
       if (app.settings.hasOwnProperty(setting)) {
-        app.debug('app.settings.' + setting + ' = ' + app.settings[setting]);
+        if (isObjectArray(app.settings[setting])) {
+          app.debug('app.settings.' + setting + ' =');
+          app.debug(app.settings[setting]);
+        } else {
+          app.debug('app.settings.' + setting + ' = ' + app.settings[setting]);
+        }
       }
     }
-    var pageLoading = document.createElement('page-loading');
-    app.$.loading.appendChild(pageLoading);
-    app.pageTitle = app.settings.title;
-    app.firstPage = true;
+    loadTheApp();
   };
   app.settingsError = function() {
     console.warn('App failed to load settings');
   };
-
+  
+  // Load the app
+  function loadTheApp() {
+    var pageLoading = document.createElement('page-loading');
+    app.$.loading.appendChild(pageLoading);
+    app.pageTitle = app.settings.title;
+  }
+  
   // Writes to the console if debugging is enabled
   app.debug = function(message, type) {
     if (app.settings.debugging) {
@@ -71,11 +78,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     var pageChanged = new Event('pageChanged');
     app.dispatchEvent(pageChanged);
   };
-  
-  
-  
-  
-  /*****************************************/
   
   // Sets app default base URL
   app.baseUrl = '/';
