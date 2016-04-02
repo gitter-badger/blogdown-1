@@ -25,22 +25,20 @@
     </paper-card>
     
     <!-- Disqus commenting -->
-    <div id="disqus">
-      <template is="dom-if" if="[[enableDisqus]]">
-        <paper-card heading="Commenting">
-          <div class="card-content">
-            <service-disqus
-              shortname="[[disqusShortname]]"
-              identifier="[[post.datestamp]]"
-              title="[[post.title]]"
-              url="[[url]]"
-              categoryId="[[categoryId]]"
-              https=false
-            ></service-disqus>
-          </div>
-        </paper-card>
-      </template>
-    </div>
+    <template is="dom-if" if="[[enableDisqus]]" restamp>
+      <paper-card heading="Commenting">
+        <div class="card-content">
+          <service-disqus
+            shortname="[[disqusShortname]]"
+            identifier="[[post.datestamp]]"
+            title="[[post.title]]"
+            url="[[url]]"
+            categoryId="[[categoryId]]"
+            https=false
+          ></service-disqus>
+        </div>
+      </paper-card>
+    </template>
     
     <iron-ajax id="post"
       url="[[postUrl]]"
@@ -59,19 +57,10 @@
         is: 'page-post',
         
         properties: {
-          postResponseData: {
-            type: String
-          },
           post: {
             type: Object,
             observer: '_postChanged'
           }
-        },
-        
-        attached: function() {
-          app.addEventListener('hash-id', function() {
-            this._checkForHashId();
-          }.bind(this));
         },
         
         _postChanged: function() {
@@ -97,43 +86,58 @@
         _loadPost: function() {
           switch (this.post.format) {
             case 'md':
-              this.isMD = true;
-              this.isHTML = false;
-              this.isPDF = false;
+              this._isMD();
               break;
             case 'html':
-              this.isMD = false;
-              this.isHTML = true;
-              this.isPDF = false;
+              this._isHTML();
               break;
             case 'pdf':
-              this.isMD = false;
-              this.isHTML = false;
-              this.isPDF = true;
+              this._isPDF();
               break;
+            default:
+              app.debug('invalid post case', 'warn');
           }
+        },
+        
+        _isMD: function() {
+          this.isMD = true;
+          this.isHTML = false;
+          this.isPDF = false;
+          this._contentLoaded();
+        },
+        
+        _isHTML: function() {
+          this.isMD = false;
+          this.isHTML = true;
+          this.isPDF = false;
+          this._contentLoaded();
+        },
+        
+        _isPDF: function() {
+          this.isMD = false;
+          this.isHTML = false;
+          this.isPDF = true;
+          this._contentLoaded();
+        },
+        
+        _contentLoaded: function() {
           this._loadDisqus();
-          app.debug(this.post.slug + '.' + this.post.format + ' loaded');
         },
         
         _loadDisqus: function() {
           if (app.settings.disqusShortname) {
             this.set('disqusShortname', app.settings.disqusShortname);
-            this.set('url', window.location.href.replace('/#', ''));
+            this.set('url', window.location.href);
             this.set('categoryId', '');
-            this.set('enableDisqus', true);
-            window.setTimeout(function() { /* ! this can be implemented better */
-              this._checkForHashId(); // check for hash id here becuase hash-id event has already fired
-            }.bind(this), 1000);
+            window.setTimeout(function() { // Delays enableDisqus long enough to allow restamping
+              this.set('enableDisqus', true);
+            }.bind(this), 1);
           }
+          this._postLoaded();
         },
         
-        _checkForHashId: function() {
-          if (app.hashId && this.enableDisqus) { // if #comment, scroll to comment section
-            if (app.hashId.indexOf('comment') >= 0) {
-              this.$.disqus.scrollIntoView();
-            }
-          }
+        _postLoaded: function() {
+          app.debug(this.post.slug + '.' + this.post.format + ' loaded');
         },
         
         _download: function() {
