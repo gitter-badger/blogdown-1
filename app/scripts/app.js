@@ -75,8 +75,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   // Redirects app to another page
   app.goTo = function(route) {
     page.redirect(route);
-    var pageChanged = new Event('pageChanged');
-    app.dispatchEvent(pageChanged);
+  };
+  
+  // Scroll page to top and expand header
+  app.scrollPageToTop = function() {
+  //  app.$.headerPanelMain.scrollToTop(true);
+  };
+
+  app.closeDrawer = function() {
+ //   app.$.paperDrawerPanel.closeDrawer();
   };
   
   // Sets app default base URL
@@ -132,14 +139,5 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     // Scale middleContainer appName
     Polymer.Base.transform('scale(' + scaleMiddle + ') translateZ(0)', appName);
   });
-
-  // Scroll page to top and expand header
-  app.scrollPageToTop = function() {
-  //  app.$.headerPanelMain.scrollToTop(true);
-  };
-
-  app.closeDrawer = function() {
- //   app.$.paperDrawerPanel.closeDrawer();
-  };
 
 })(document);

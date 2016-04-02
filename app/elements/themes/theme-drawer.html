@@ -14,11 +14,11 @@
       }
     </style>
 
-    <paper-drawer-panel id="drawer" narrow="{{mobile}}">
+    <paper-drawer-panel id="paperDrawerPanel" narrow="{{mobile}}">
 
       <!-- Drawer -->
-      <div id="drawer" drawer>
-        <paper-menu>
+      <div drawer>
+        <paper-menu selected="[[selected]]">
           <template is="dom-repeat" items="[[menuItems]]" as="menuItem">
             <paper-item id="[[menuItem.slug]]" on-click="_goToPage">[[menuItem.title]]</paper-item>
           </template>
@@ -27,7 +27,7 @@
       <!-- End Drawer -->
 
       <!-- Header -->
-      <paper-header-panel main>
+      <paper-header-panel id="headerPanelMain" main>
         <paper-toolbar>
           <template is="dom-if" if="[[loading]]" restamp>
             <iron-flex-layout class="fit">
@@ -76,16 +76,39 @@
           _indeterminateLoading: {
             type: Boolean,
             value: true
+          },
+          routeData: {
+            type: Object,
+            observer: 'routeChanged'
           }
         },
 
         ready: function() {
           this._loadMenuItems();
           this._loadSocialAccounts();
-          app.addEventListener('pageChanged', function() {
-            this.$.drawer.closeDrawer();
-          }.bind(this));
         },
+        
+        attached: function() {
+          this.set('_attached', true);
+          this.routeChanged();
+        },
+        
+        /*!!! this needs encapsulated !!!*/
+        routeChanged: function() { 
+          if (this._attached) {
+            for (var i = 0; i < this.menuItems.length; i++) { // Automatically select menuItem
+              var route = '/' + this.routeData.slugs.page;
+              if (this.routeData.slugs.child) {
+                route = '/' + this.routeData.slugs.page + 's';
+              }
+              if (this.menuItems[i].route === route) {
+                this.set('selected', i);
+              }
+            }
+            this.$.paperDrawerPanel.closeDrawer();
+          }
+        },
+        /*!!!*/
 
         _goToPage: function(e) {
           var model = e.model;

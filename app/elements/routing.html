@@ -1,13 +1,3 @@
-<!--
-@license
-Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
-This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
-The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
-The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
-Code distributed by Google as part of the polymer project is also
-subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
--->
-
 <script src="../bower_components/page/page.js"></script>
 <script>
   window.addEventListener('WebComponentsReady', function() {
@@ -22,22 +12,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     }
 
     // Middleware
-    function scrollToTop(ctx, next) {
-      app.scrollPageToTop();
+    function routeChanged(ctx, next) {
+      var event = new Event('routeChanged');
+      app.dispatchEvent(event);
       next();
-    }
-
-    function closeDrawer(ctx, next) {
-      app.closeDrawer();
-      next();
-    }
-
-    function setFocus(selected){
-   //   document.querySelector('section[data-route="' + selected + '"] .page-title').focus();
     }
 
     // Routes
-    page('*', scrollToTop, closeDrawer, function(ctx, next) {
+    page('*', routeChanged, function(ctx, next) {
       next();
     });
 
@@ -46,7 +28,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         type: 'home',
         slugs: data.params
       };
-      setFocus(app.route);
     });
 
     page(app.baseUrl, function(data) {
@@ -54,7 +35,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         type: 'home',
         slugs: data.params
       };
-      setFocus(app.route);
     });
 
     page('/:page', function(data) {
@@ -62,7 +42,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         type: 'page',
         slugs: data.params
       };
-      setFocus(app.route);
     });
 
     page('/:page/:child', function(data) {
@@ -70,7 +49,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         type: 'child',
         slugs: data.params
       };
-      setFocus(app.route);
     });
     
     // 404
