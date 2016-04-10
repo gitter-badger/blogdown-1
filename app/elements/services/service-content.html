@@ -2,36 +2,34 @@
 
 <dom-module id="service-content">
   <template>
-
-    <iron-pages attr-for-selected="route" selected="[[route]]">
-      <section route="home">
-         <page-home></page-home>
-      </section>
-      
-      <section route="posts">
-        <page-posts></page-posts>
-      </section>
-      
-      <section route="search">
+    
+    <template is="dom-if" if="[[_isEqual(route, 'home')]]" restamp>
+      <page-home></page-home>
+    </template>
+    
+    <template is="dom-if" if="[[_isEqual(route, 'posts')]]" restamp>
+      <page-posts></page-posts>
+    </template>
+    
+    <template is="dom-if" if="[[_isEqual(route, 'search')]]" restamp>
         <page-search></page-search>
-      </section>
-
-      <section route="contact">
+    </template>
+    
+    <template is="dom-if" if="[[_isEqual(route, 'contact')]]" restamp>
         <page-contact></page-contact>
-      </section>
-      
-      <section route="404">
+    </template>
+    
+    <template is="dom-if" if="[[_isEqual(route, '404')]]" restamp>
         <page-404></page-404>
-      </section>
-      
-      <section route="soft">
+    </template>
+    
+    <template is="dom-if" if="[[_isEqual(route, 'soft')]]" restamp>
         <page-soft page="[[softPage]]"></page-soft>
-      </section>
-
-      <section route="post">
+    </template>
+    
+    <template is="dom-if" if="[[_isEqual(route, 'post')]]" restamp>
        <page-post post="[[post]]"></page-post>
-      </section>
-    </iron-pages>
+    </template>
     
   </template>
 
