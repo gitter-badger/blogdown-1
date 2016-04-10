@@ -195,6 +195,10 @@
               app.debug('WARNING: page-' + name + '.html import failed to load');
               app.toast('WARNING: page-' + name + '.html import failed to load');
           }.bind(this));
+        },
+        
+        _isEqual: function(a, b) {
+          return a === b;
         }
       });
     })();
