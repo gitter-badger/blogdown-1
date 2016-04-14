@@ -138,8 +138,18 @@ gulp.task('copy', function() {
   var bower = gulp.src([
     'app/bower_components/{webcomponentsjs,platinum-sw,sw-toolbox,promise-polyfill}/**/*'
   ]).pipe(gulp.dest(dist('bower_components')));
+  
+  // Copy pages
+  var pages = gulp.src([
+    'app/pages/*'
+  ]).pipe(gulp.dest(dist('pages')));
+  
+  // Copy posts
+  var posts = gulp.src([
+    'app/posts/*'
+  ]).pipe(gulp.dest(dist('posts')));
 
-  return merge(app, bower)
+  return merge(app, bower, pages, posts)
     .pipe($.size({
       title: 'copy'
     }));
@@ -241,6 +251,8 @@ gulp.task('serve', ['styles'], function() {
   gulp.watch(['app/styles/**/*.css'], ['styles', reload]);
   gulp.watch(['app/scripts/**/*.js'], reload);
   gulp.watch(['app/images/**/*'], reload);
+  gulp.watch(['app/pages/**/*'], reload);
+  gulp.watch(['app/posts/**/*'], reload);
 });
 
 // Build and serve the output from the dist build
