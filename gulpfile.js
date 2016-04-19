@@ -1,4 +1,5 @@
 /*
+@license
 Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
 This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
 The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
@@ -148,8 +149,13 @@ gulp.task('copy', function() {
   var posts = gulp.src([
     'app/posts/*'
   ]).pipe(gulp.dest(dist('posts')));
+  
+  // Copy json
+  var json = gulp.src([
+    'app/json/*'
+  ]).pipe(gulp.dest(dist('json')));
 
-  return merge(app, bower, pages, posts)
+  return merge(app, bower, pages, posts, json)
     .pipe($.size({
       title: 'copy'
     }));
@@ -167,7 +173,7 @@ gulp.task('fonts', function() {
 // Scan your HTML for assets & optimize them
 gulp.task('html', function() {
   return optimizeHtmlTask(
-    ['app/**/*.html', '!app/{elements,test,bower_components}/**/*.html'],
+    ['app/**/*.html', '!app/{elements,test,bower_components,pages,posts}/**/*.html'],
     dist());
 });
 
@@ -251,8 +257,6 @@ gulp.task('serve', ['styles'], function() {
   gulp.watch(['app/styles/**/*.css'], ['styles', reload]);
   gulp.watch(['app/scripts/**/*.js'], reload);
   gulp.watch(['app/images/**/*'], reload);
-  gulp.watch(['app/pages/**/*'], reload);
-  gulp.watch(['app/posts/**/*'], reload);
 });
 
 // Build and serve the output from the dist build
@@ -302,7 +306,7 @@ gulp.task('deploy-gh-pages', function() {
     // Check if running task from Travis CI, if so run using GH_TOKEN
     // otherwise run using ghPages defaults.
     .pipe($.if(process.env.TRAVIS === 'true', $.ghPages({
-      remoteUrl: 'https://$GH_TOKEN@github.com/polymerelements/polymer-starter-kit.git',
+      remoteUrl: 'https://$GH_TOKEN@github.com/PolymerElements/polymer-starter-kit.git',
       silent: true,
       branch: 'gh-pages'
     }), $.ghPages()));
