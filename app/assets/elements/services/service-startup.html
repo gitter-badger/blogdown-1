@@ -5,7 +5,7 @@
 
     <!-- Load posts -->
     <iron-ajax id="posts"
-      url="../../json/posts.json"
+      url="../../../content/posts.json"
       handle-as="json"
       on-response="postsResponse"
       on-error="postsError"
@@ -100,7 +100,7 @@
         },
         
         _loadElement: function(name) {
-          this.importHref('../elements/themes/theme-' + name + '.html', function() {
+          this.importHref('../assets/elements/themes/theme-' + name + '.html', function() {
             app.debug('theme-' + name + ' loaded');
             this._loaded();
           }.bind(this), function() {

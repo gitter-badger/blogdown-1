@@ -30,14 +30,26 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         }
       }
     }
-    loadTheApp();
+    app._loadStyle();
+    app._loadTheApp();
   };
   app.settingsError = function() {
     console.warn('App failed to load settings');
   };
   
-  // Load the app
-  function loadTheApp() {
+  app._loadStyle = function() { // Load style
+    var style = 'default';
+    if (localStorage.style) {
+      style = localStorage.style;
+    }
+    this.importHref('../assets/styles/style-' + style + '.html', function() {
+      app.debug('style-' + style + ' loaded');
+    }.bind(this), function() {
+        app.debug('WARNING: style-' + style + 'failed to load');
+    }.bind(this));
+  }
+  
+  app._loadTheApp = function() { // Load the app
     var pageLoading = document.createElement('page-loading');
     app.$.loading.appendChild(pageLoading);
     app.pageTitle = app.settings.title;

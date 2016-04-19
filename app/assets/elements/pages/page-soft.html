@@ -51,7 +51,7 @@
         },
         
         _pageChanged: function() {
-          this.pageUrl = '../../pages/' + this.page.slug + '.' + this.page.format;
+          this.pageUrl = '../../content/pages/' + this.page.slug + '.' + this.page.format;
           if (this.page.format === 'md' || this.page.format === 'html') {
             this.$.page.generateRequest();
           } else {

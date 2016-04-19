@@ -65,7 +65,7 @@
         
         _postChanged: function() {
           this.set('enableDisqus', false);
-          this.postUrl = '../../posts/' + this.post.slug + '.' + this.post.format;
+          this.postUrl = '../../content/posts/' + this.post.slug + '.' + this.post.format;
           if (this.post.format === 'md' || this.post.format === 'html') {
             this.$.post.generateRequest();
           } else {

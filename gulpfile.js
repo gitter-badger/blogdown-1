@@ -102,7 +102,7 @@ var optimizeHtmlTask = function(src, dest) {
 
 // Compile and automatically prefix stylesheets
 gulp.task('styles', function() {
-  return styleTask('styles', ['**/*.css']);
+  return styleTask('assets/styles', ['**/*.css']);
 });
 
 // Ensure that we are not missing required files for the project
@@ -116,18 +116,29 @@ gulp.task('ensureFiles', function(cb) {
   }), cb);
 });
 
+// Optimize scripts
+gulp.task('scripts', function() {
+  gulp.src([
+    'app/assets/scripts/*',
+    '!app/assets/scripts/app.js'
+  ])
+  .pipe($.uglify({
+    preserveComments: 'some'
+  }))
+  .pipe(gulp.dest(dist('assets/scripts')));
+});
+
 // Optimize images
 gulp.task('images', function() {
-  return imageOptimizeTask('app/images/**/*', dist('images'));
+  return imageOptimizeTask('app/assets/images/**/*', dist('assets/images'));
 });
 
 // Copy all files at the root level (app)
 gulp.task('copy', function() {
   var app = gulp.src([
     'app/*',
-    '!app/test',
-    '!app/elements',
-    '!app/bower_components',
+    '!app/assets',
+    '!app/content',
     '!app/cache-config.json',
     '!**/.DS_Store'
   ], {
@@ -137,25 +148,41 @@ gulp.task('copy', function() {
   // Copy over only the bower_components we need
   // These are things which cannot be vulcanized
   var bower = gulp.src([
-    'app/bower_components/{webcomponentsjs,platinum-sw,sw-toolbox,promise-polyfill}/**/*'
+    'app/assets/bower_components/{webcomponentsjs,platinum-sw,sw-toolbox,promise-polyfill}/**/*'
   ]).pipe(gulp.dest(dist('bower_components')));
+  
+  // Copy content
+  var content = gulp.src([
+    'app/content/*'
+  ]).pipe(gulp.dest(dist('content')));
   
   // Copy pages
   var pages = gulp.src([
-    'app/pages/*'
-  ]).pipe(gulp.dest(dist('pages')));
+    'app/content/pages/*'
+  ]).pipe(gulp.dest(dist('content/pages')));
   
   // Copy posts
   var posts = gulp.src([
-    'app/posts/*'
-  ]).pipe(gulp.dest(dist('posts')));
+    'app/content/posts/*'
+  ]).pipe(gulp.dest(dist('content/posts')));
   
-  // Copy json
-  var json = gulp.src([
-    'app/json/*'
-  ]).pipe(gulp.dest(dist('json')));
+  // Copy page elements
+  var pageElements = gulp.src([
+    'app/assets/elements/pages/*.dynamic.html'
+  ]).pipe(gulp.dest(dist('assets/elements/pages')));
+  
+  // Copy service elements
+  var serviceElements = gulp.src([
+    'app/assets/elements/services/*.dynamic.html'
+  ]).pipe(gulp.dest(dist('assets/elements/services')));
+  
+  // Copy theme elements
+  var themeElements = gulp.src([
+    'app/assets/elements/themes/*.dynamic.html'
+  ]).pipe(gulp.dest(dist('assets/elements/themes')));
 
-  return merge(app, bower, pages, posts, json)
+  return merge(app, bower, content, pages, posts, 
+    pageElements, serviceElements, themeElements)
     .pipe($.size({
       title: 'copy'
     }));
@@ -163,8 +190,8 @@ gulp.task('copy', function() {
 
 // Copy web fonts to dist
 gulp.task('fonts', function() {
-  return gulp.src(['app/fonts/**'])
-    .pipe(gulp.dest(dist('fonts')))
+  return gulp.src(['app/assets/fonts/**'])
+    .pipe(gulp.dest(dist('assets/fonts')))
     .pipe($.size({
       title: 'fonts'
     }));
@@ -172,20 +199,22 @@ gulp.task('fonts', function() {
 
 // Scan your HTML for assets & optimize them
 gulp.task('html', function() {
-  return optimizeHtmlTask(
-    ['app/**/*.html', '!app/{elements,test,bower_components,pages,posts}/**/*.html'],
-    dist());
+  return optimizeHtmlTask([
+    'app/**/*.html',
+    '!app/assets/{elements,test,bower_components}/**/*.html',
+    '!app/content/{pages,posts}/**/*.html'
+  ], dist());
 });
 
 // Vulcanize granular configuration
 gulp.task('vulcanize', function() {
-  return gulp.src('app/elements/elements.html')
+  return gulp.src('app/assets/elements/elements.html')
     .pipe($.vulcanize({
       stripComments: true,
       inlineCss: true,
       inlineScripts: true
     }))
-    .pipe(gulp.dest(dist('elements')))
+    .pipe(gulp.dest(dist('assets/elements')))
     .pipe($.size({title: 'vulcanize'}));
 });
 
@@ -206,8 +235,8 @@ gulp.task('cache-config', function(callback) {
   glob([
     'index.html',
     './',
-    'bower_components/webcomponentsjs/webcomponents-lite.min.js',
-    '{elements,scripts,styles}/**/*.*'],
+    'assets/bower_components/webcomponentsjs/webcomponents-lite.min.js',
+    'assets/{elements,scripts,styles}/**/*.*'],
     {cwd: dir}, function(error, files) {
     if (error) {
       callback(error);
@@ -287,7 +316,7 @@ gulp.task('default', ['clean'], function(cb) {
   // Uncomment 'cache-config' if you are going to use service workers.
   runSequence(
     ['ensureFiles', 'copy', 'styles'],
-    ['images', 'fonts', 'html'],
+    ['scripts', 'images', 'fonts', 'html'],
     'vulcanize', // 'cache-config',
     cb);
 });

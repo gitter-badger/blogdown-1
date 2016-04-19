@@ -188,7 +188,7 @@
         },
         
         _loadElement: function(name) {
-          this.importHref('../elements/pages/page-' + name + '.html', function() {
+          this.importHref('../assets/elements/pages/page-' + name + '.html', function() {
             app.debug('page-' + name + '.html was imported.');
           }.bind(this), function() {
               window.history.back();
