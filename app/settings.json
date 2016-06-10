@@ -27,7 +27,8 @@
   "hardPages": [
     {
       "title": "Home",
-      "addToMenu": true
+      "addToMenu": true,
+      "redirect": false
     }, {
       "title": "Posts",
       "addToMenu": true
