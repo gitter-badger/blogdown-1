@@ -149,7 +149,7 @@ gulp.task('copy', function() {
   // These are things which cannot be vulcanized
   var bower = gulp.src([
     'app/assets/bower_components/{webcomponentsjs,platinum-sw,sw-toolbox,promise-polyfill}/**/*'
-  ]).pipe(gulp.dest(dist('bower_components')));
+  ]).pipe(gulp.dest(dist('assets/bower_components')));
   
   // Copy content
   var content = gulp.src([
@@ -168,17 +168,17 @@ gulp.task('copy', function() {
   
   // Copy page elements
   var pageElements = gulp.src([
-    'app/assets/elements/pages/*.dynamic.html'
+    'app/assets/elements/pages/*.dyn.html'
   ]).pipe(gulp.dest(dist('assets/elements/pages')));
   
   // Copy service elements
   var serviceElements = gulp.src([
-    'app/assets/elements/services/*.dynamic.html'
+    'app/assets/elements/services/*.dyn.html'
   ]).pipe(gulp.dest(dist('assets/elements/services')));
   
   // Copy theme elements
   var themeElements = gulp.src([
-    'app/assets/elements/themes/*.dynamic.html'
+    'app/assets/elements/themes/*.dyn.html'
   ]).pipe(gulp.dest(dist('assets/elements/themes')));
 
   return merge(app, bower, content, pages, posts, 
@@ -282,7 +282,7 @@ gulp.task('serve', ['styles'], function() {
     }
   });
 
-  gulp.watch(['app/**/*.html', '!app/bower_components/**/*.html'], reload);
+  gulp.watch(['app/**/*.html', '!app/assets/bower_components/**/*.html'], reload);
   gulp.watch(['app/styles/**/*.css'], ['styles', reload]);
   gulp.watch(['app/scripts/**/*.js'], reload);
   gulp.watch(['app/images/**/*'], reload);

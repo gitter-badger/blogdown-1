@@ -43,6 +43,13 @@
           routeData: {
             type: Object,
             observer: 'routeChanged'
+          },
+          staticPages: {
+            type: Array,
+            value: [
+              "404",
+              "loading"
+            ]
           }
         },
         
@@ -188,6 +195,16 @@
         },
         
         _loadElement: function(name) {
+          var dynamic = true;
+          for (var i = 0; i < this.staticPages.length; i++) {
+            if (name === this.staticPages[i]) {
+              dynamic = false;
+              break;
+            }
+          }
+          if (dynamic) {
+            name = name + '.dyn';
+          }
           this.importHref('../assets/elements/pages/page-' + name + '.html', function() {
             app.debug('page-' + name + '.html was imported.');
           }.bind(this), function() {
@@ -195,6 +212,7 @@
               app.debug('WARNING: page-' + name + '.html import failed to load');
               app.toast('WARNING: page-' + name + '.html import failed to load');
           }.bind(this));
+          
         },
         
         _isEqual: function(a, b) {
