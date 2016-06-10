@@ -47,8 +47,26 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <link rel="stylesheet" href="assets/styles/main.css">
   <!-- endbuild-->
   
-  <!-- build handled by gulpfile -->
-  <script src="../../../../../../../../assets/scripts/forcehashbang.js"></script>
+  <!-- force hashbang -->
+  <script>
+    if (window.location.protocol === 'file:') { // Prevents errors when not running on server
+      window.location.href = './assets/errors/no-server.html';
+    } else {
+      var url = window.location.href;
+      var slashes = 0;
+      for (var i = 0; i < url.length; i++) {
+        if (url[i] === '/') {
+          slashes++;
+          if (slashes === 3) {
+            if (url[i + 1] && url[i + 1] !== '#' && url[i + 2] !== '!') { // HashBang not found
+              window.location.href = '/#!' + url.substring(i, url.length);
+            }
+            break;
+          }
+        }
+      }
+    }
+  </script>
 
   <!-- build:js bower_components/webcomponentsjs/webcomponents-lite.min.js -->
   <script src="assets/bower_components/webcomponentsjs/webcomponents-lite.js"></script>

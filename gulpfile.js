@@ -166,6 +166,11 @@ gulp.task('copy', function() {
     'app/content/posts/*'
   ]).pipe(gulp.dest(dist('content/posts')));
   
+  // Copy error pages
+  var pageElements = gulp.src([
+    'app/assets/errors/*'
+  ]).pipe(gulp.dest(dist('assets/errors')));
+  
   // Copy page elements
   var pageElements = gulp.src([
     'app/assets/elements/pages/*.dyn.html'
