@@ -3,27 +3,54 @@
 <dom-module id="page-post">
   <template>
     
-    <paper-card heading="[[post.title]]">
-      <template is="dom-if" if="[[isMD]]" restamp>
-        <div class="card-content">
-          <juicy-markdown value="[[postResponseData]]"></juicy-markdown>
-        </div>
-      </template>
-      <template is="dom-if" if="[[isHTML]]" restamp>
-        <div class="card-content">
-          <template is="juicy-html" content$="[[postResponseData]]"></template>
-        </div>
-      </template>
-      <template is="dom-if" if="[[isPDF]]" restamp>
-        <div class="card-content">
-          <pdf-object file="[[postUrl]]" height="400px"></pdf-object>
-        </div>
-        <div class="card-actions">
-          <paper-button on-click="_download">Fullscreen</paper-button>
-        </div>
-      </template>
-    </paper-card>
+    <!-- Has featured image -->
+    <template is="dom-if" if="[[featuredImage]]" restamp>
+      <paper-card heading="[[post.title]]" image="[[featuredImage]]">
+        <template is="dom-if" if="[[isMD]]" restamp>
+          <div class="card-content">
+            <juicy-markdown value="[[postResponseData]]"></juicy-markdown>
+          </div>
+        </template>
+        <template is="dom-if" if="[[isHTML]]" restamp>
+          <div class="card-content">
+            <template is="juicy-html" content$="[[postResponseData]]"></template>
+          </div>
+        </template>
+        <template is="dom-if" if="[[isPDF]]" restamp>
+          <div class="card-content">
+            <pdf-object file="[[postUrl]]" height="400px"></pdf-object>
+          </div>
+          <div class="card-actions">
+            <paper-button on-click="_download">Fullscreen</paper-button>
+          </div>
+        </template>
+      </paper-card>
+    </template>
     
+    <!-- No featured image -->
+    <template is="dom-if" if="[[!featuredImage]]" restamp>
+      <paper-card heading="[[post.title]]">
+        <template is="dom-if" if="[[isMD]]" restamp>
+          <div class="card-content">
+            <juicy-markdown value="[[postResponseData]]"></juicy-markdown>
+          </div>
+        </template>
+        <template is="dom-if" if="[[isHTML]]" restamp>
+          <div class="card-content">
+            <template is="juicy-html" content$="[[postResponseData]]"></template>
+          </div>
+        </template>
+        <template is="dom-if" if="[[isPDF]]" restamp>
+          <div class="card-content">
+            <pdf-object file="[[postUrl]]" height="400px"></pdf-object>
+          </div>
+          <div class="card-actions">
+            <paper-button on-click="_download">Fullscreen</paper-button>
+          </div>
+        </template>
+      </paper-card>
+    </template>
+
     <!-- Disqus commenting -->
     <template is="dom-if" if="[[enableDisqus]]" restamp>
       <paper-card heading="Commenting">
@@ -71,6 +98,7 @@
           } else {
             this._loadPost();
           }
+          this._determineFeaturedImage();
         },
         
         postResponse: function() {
@@ -120,6 +148,36 @@
           this._contentLoaded();
         },
         
+        _determineFeaturedImage: function() {
+          if (this.post.featuredImage) {
+            this._featuredImage = false;
+            if (this.post.featuredImage === true) { // Featured image assumed
+              this._featuredImage = '../../../../../../../../content/images/' + this.post.slug + '.jpg';
+              this._checkImage(this._featuredImage, function() { // Image exists
+                this.featuredImage = this._featuredImage;
+              }.bind(this), function() { // Image doesn't exist
+                this._featuredImage = '../../../../../../../../content/images/' + this.post.slug + '.png';
+                this._checkImage(this._featuredImage, function() { // Image exists
+                  this.featuredImage = this._featuredImage;
+                }.bind(this), function() { // Image doesn't exist
+                  this.featuredImage = false;
+                }.bind(this));
+              }.bind(this));
+            } else {
+              if (this._isRelativeUrl(this.post.featuredImage)) { // Relative featured image
+                this._featuredImage = '../../../../../../../../content/images/' + this.post.featuredImage;
+              } else { // Absolute featured image
+                this._featuredImage = this.post.featuredImage;
+              }
+              this._checkImage(this._featuredImage, function() { // Image exists
+                this.featuredImage = this._featuredImage;
+              }.bind(this), function() { // Image doesn't exist
+                this.featuredImage = false;
+              }.bind(this));
+            }
+          }
+        },
+        
         _contentLoaded: function() {
           this._loadDisqus();
         },
@@ -142,6 +200,22 @@
         
         _download: function() {
           window.open(this.postUrl);
+        },
+        
+        _isRelativeUrl: function(url) {
+          var regex = new RegExp('^(?:[a-z]+:)?//', 'i');
+          if (regex.test(url)) { // absolute url
+            return false;
+          } else { // relative url
+            return true;
+          }
+        },
+        
+        _checkImage: function(image, success, error) {
+          var img = new Image();
+          img.onload = success;
+          img.onerror = error;
+          img.src = image;
         }
       });
     })();

@@ -71,19 +71,59 @@
             this.posts = [];
             var posts = this.postsResponseData;
             for (var i = 0; i < posts.length; i++) {
-//            var slug = posts[i].title.toLowerCase().replace(/[^\s\w+\-_#.]/g, '').replace(/\s+/g, '-');
-              var format = 'md';
-              if (posts[i].format) {
-                format = posts[i].format;
+              if (posts[i].status !== 'draft' && posts[i].status !== 'unpublished') { // Post is active
+                var permlinkMode = app.settings.permlinkMode;
+                var pushPost = true;
+                // Title
+                var title = 'Untitled Post'
+                if (!posts[i].title) {
+                  permlinkMode = 'date';
+                } else {
+                  title = posts[i].title;
+                }
+                // Datestamp
+                var datestamp = '0000000000000';
+                if (posts[i].date) {
+                  datestamp = Number(moment.unix(posts[i].date)).toString();
+                }
+                // Author
+                var author = 'No Author';
+                if (posts[i].author) {
+                  author = posts[i].author;
+                }
+                // Slug
+                var slug = null;
+                if (permlinkMode === 'date') { // date mode
+                  if (posts[i].date) {
+                    slug = posts[i].date.toLowerCase().replace(/[^\s\w+\-_#.]/g, '').replace(/\s+/g, '-');
+                  } else { // Prevents errors when a title and date stamp were not given
+                    pushPost = false;
+                  }
+                } else { // title mode
+                  slug = posts[i].title.toLowerCase().replace(/[^\s\w+\-_#.]/g, '').replace(/\s+/g, '-');
+                }
+                // Format
+                var format = 'md';
+                if (posts[i].format) {
+                  format = posts[i].format;
+                }
+                // Featured image
+                var featuredImage = true;
+                if (posts[i].featuredImage) { // Finding featured image location happens in page-post.dyn.html
+                  featuredImage = posts[i].featuredImage;
+                }
+                var post = {
+                  title: title,
+                  datestamp: datestamp,
+                  author: author,
+                  slug: slug,
+                  format: format,
+                  featuredImage: featuredImage
+                };
+                if (pushPost) {
+                  this.push('posts', post);
+                }
               }
-              var post = {
-                title: posts[i].title,
-                datestamp: posts[i].datestamp,
-                author: posts[i].author,
-                slug: posts[i].datestamp,
-                format: format
-              };
-              this.push('posts', post);
             }
             app.posts = this.posts;
           } else {

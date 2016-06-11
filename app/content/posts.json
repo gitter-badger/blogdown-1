@@ -1,17 +1,19 @@
 [
   {
     "title": "Hello, world!",
-    "datestamp": 1457993374,
-    "author": "jamrizzi"
+    "date": 1457993374,
+    "author": "jamrizzi",
+    "featuredImage": true,
+    "status": "published"
   },
   {
     "title": "2ndpost",
-    "datestamp": 1457993401,
+    "date": 1457993401,
     "author": "jamrizzi"
   },
   {
     "title": "3ndpost",
-    "datestamp": 1459321181,
+    "date": 1459321181,
     "author": "jamrizzi",
     "format": "pdf"
   }

@@ -39,6 +39,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   
   app._loadStyle = function() { // Load style
     var style = 'default';
+    if (app.settings.style) {
+      style = app.settings.style;
+    }
     if (localStorage.style) {
       style = localStorage.style;
     }
