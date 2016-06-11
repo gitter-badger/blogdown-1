@@ -1,8 +1,7 @@
 <dom-module id="page-home">
   <template>
     
-    <paper-input is="iron-input" value="[[olddate]]" bind-value="{{olddate}}"></paper-input>
-    <span>This is the home page.</span><span>[[newdate]]</span>
+    <span>This is the home page</span>
 
   </template>
 
@@ -13,15 +12,9 @@
         is: 'page-home',
         
         properties: {
-          olddate: {
-            type: String,
-            value: "July 8, 1995",
-            observer: "dateChanged"
-          }
         },
 
         ready: function() {
-          this.dateChanged();
           var redirect = false;
           for (var i = 0; i < app.settings.hardPages.length; i++) {
             if (app.settings.hardPages[i].title === 'Home') {
@@ -32,10 +25,6 @@
           if (redirect) {
             app.goTo('/' + redirect);
           }
-        },
-        
-        dateChanged: function() {
-          this.newdate = moment(this.olddate).format()
         }
       });
     })();

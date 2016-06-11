@@ -72,7 +72,6 @@
             var posts = this.postsResponseData;
             for (var i = 0; i < posts.length; i++) {
               if (posts[i].status !== 'draft' && posts[i].status !== 'unpublished') { // Post is active
-                var permlinkMode = app.settings.permlinkMode;
                 var pushPost = true;
                 // Title
                 var title = 'Untitled Post'
@@ -84,7 +83,7 @@
                 // Datestamp
                 var datestamp = '0000000000000';
                 if (posts[i].date) {
-                  datestamp = Number(moment.unix(posts[i].date)).toString();
+                  datestamp = Number(moment.unix(new Date(posts[i].date))).toString();
                 }
                 // Author
                 var author = 'No Author';
@@ -93,14 +92,14 @@
                 }
                 // Slug
                 var slug = null;
-                if (permlinkMode === 'date') { // date mode
+                if (app.settings.permlinkMode === 'date') { // date mode
                   if (posts[i].date) {
-                    slug = posts[i].date.toLowerCase().replace(/[^\s\w+\-_#.]/g, '').replace(/\s+/g, '-');
+                    slug = posts[i].date.toString().toLowerCase().replace(/[^\s\w+\-_#.]/g, '').replace(/\s+/g, '-');
                   } else { // Prevents errors when a title and date stamp were not given
                     pushPost = false;
                   }
                 } else { // title mode
-                  slug = posts[i].title.toLowerCase().replace(/[^\s\w+\-_#.]/g, '').replace(/\s+/g, '-');
+                  slug = posts[i].title.toString().toLowerCase().replace(/[^\s\w+\-_#.]/g, '').replace(/\s+/g, '-');
                 }
                 // Format
                 var format = 'md';
@@ -109,7 +108,7 @@
                 }
                 // Featured image
                 var featuredImage = true;
-                if (posts[i].featuredImage) { // Finding featured image location happens in page-post.dyn.html
+                if (posts[i].featuredImage === false) { // Finding featured image location happens in page-post.dyn.html
                   featuredImage = posts[i].featuredImage;
                 }
                 var post = {

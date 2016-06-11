@@ -3,8 +3,8 @@
     "title": "Hello, world!",
     "date": 1457993374,
     "author": "jamrizzi",
-    "featuredImage": true,
-    "status": "published"
+    "status": "published",
+    "featuredImage": true
   },
   {
     "title": "2ndpost",
