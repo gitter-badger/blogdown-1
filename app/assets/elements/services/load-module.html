@@ -1,0 +1,38 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+
+<dom-module id="load-module">
+  <template>
+    
+  </template>
+
+  <script>
+    (function() {
+      'use strict';
+      Polymer({
+        is: 'load-module',
+        
+        properties: {
+          name: {
+            type: String
+          }
+        },
+        
+        ready: function() {
+          Polymer.dom(this.root).innerHTML = '<content><mod-' + this.name + '></content>';
+          this._loadElement(this.name);
+        },
+        
+        _loadElement: function(name) {
+          this.importHref('../../../../../../../../content/modules/' + name + '.mod', function() {
+            app.debug(name + '.mod was imported.');
+          }.bind(this), function() {
+              window.history.back();
+              app.debug('WARNING: ' + name + '.mod import failed to load');
+              app.toast('WARNING: ' + name + '.mod import failed to load');
+          }.bind(this));
+        }
+      });
+    })();
+  </script>
+
+</dom-module>

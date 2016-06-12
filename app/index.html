@@ -24,7 +24,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <meta name="theme-color" content="#2E3AA1">
 
   <!-- Web Application Manifest -->
-  <link rel="manifest" href="manifest.json">
+  <link rel="manifest" href="assets/manifest.json">
 
   <!-- Tile color for Win8 -->
   <meta name="msapplication-TileColor" content="#3372DF">
@@ -43,7 +43,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <!-- Tile icon for Win8 (144x144) -->
   <meta name="msapplication-TileImage" content="assets/images/touch/ms-touch-icon-144x144-precomposed.png">
 
-  <!-- build:css styles/main.css -->
+  <!-- build:css assets/styles/main.css -->
   <link rel="stylesheet" href="assets/styles/main.css">
   <!-- endbuild-->
   
@@ -68,7 +68,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     }
   </script>
 
-  <!-- build:js bower_components/webcomponentsjs/webcomponents-lite.min.js -->
+  <!-- build:js assets/bower_components/webcomponentsjs/webcomponents-lite.min.js -->
   <script src="assets/bower_components/webcomponentsjs/webcomponents-lite.js"></script>
   <!-- endbuild -->
 
@@ -90,7 +90,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <!-- Load the app -->
     <span id="loading"></span>
     <iron-ajax id="settings" auto
-      url="settings.json"
+      url="content/settings.json"
       handle-as="json"
       on-response="settingsResponse"
       on-error="settingsError"
@@ -131,7 +131,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
   </template>
 
-  <!-- build:js scripts/app.js -->
+  <!-- build:js assets/scripts/app.js -->
   <script src="assets/scripts/app.js"></script>
   <!-- endbuild-->
 </body>

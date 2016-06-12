@@ -1,8 +1,11 @@
-<dom-module id="hard-contact">
+<dom-module id="mod-boo">
   <template>
 
-    <span>Contact us here.</span>
-    <load-module name="boo"></load-module>
+    <paper-card>
+      <div class="class-content">
+        I am a boo modules.
+      </div>
+    </paper-card>
 
   </template>
 
@@ -10,7 +13,7 @@
     (function() {
       'use strict';
       Polymer({
-        is: 'hard-contact',
+        is: 'mod-boo',
         
         ready: function() {
 

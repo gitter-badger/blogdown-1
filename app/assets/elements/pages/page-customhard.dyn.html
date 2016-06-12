@@ -20,7 +20,7 @@
         },
         
         _pageChanged: function() {
-          Polymer.dom(this.root).innerHTML = '<page-' + this.page.slug + '>';
+          Polymer.dom(this.root).innerHTML = '<hard-' + this.page.slug + '>';
           this._loadElement(this.page.slug);
         },
         

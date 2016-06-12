@@ -166,8 +166,18 @@ gulp.task('copy', function() {
     'app/content/posts/*'
   ]).pipe(gulp.dest(dist('content/posts')));
   
+  // Copy images
+  var images = gulp.src([
+    'app/content/images/*'
+  ]).pipe(gulp.dest(dist('content/images')));
+  
+  // Copy modules
+  var modules = gulp.src([
+    'app/content/modules/*'
+  ]).pipe(gulp.dest(dist('content/modules')));
+  
   // Copy error pages
-  var pageElements = gulp.src([
+  var errors = gulp.src([
     'app/assets/errors/*'
   ]).pipe(gulp.dest(dist('assets/errors')));
   
@@ -186,7 +196,7 @@ gulp.task('copy', function() {
     'app/assets/elements/themes/*.dyn.html'
   ]).pipe(gulp.dest(dist('assets/elements/themes')));
 
-  return merge(app, bower, content, pages, posts, 
+  return merge(app, bower, content, pages, posts, modules, errors, images,
     pageElements, serviceElements, themeElements)
     .pipe($.size({
       title: 'copy'
