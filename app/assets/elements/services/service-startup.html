@@ -36,11 +36,20 @@
             } else {
               route = '/' + slug;
             }
+            // Determine hard page type
+            var type = 'custom-hard';
+            var permanentHardPages = ['home', 'search', 'posts'];
+            for (var j = 0; j < permanentHardPages.length; j++) {
+              if (slug === permanentHardPages[j]) {
+                type = 'permanent-hard';
+                break;
+              }
+            }
             var page = {
               title: hardPages[i].title,
               route: route,
               slug: slug,
-              type: "hard",
+              type: type,
               addToMenu: hardPages[i].addToMenu
             };
             this.push('pages', page);

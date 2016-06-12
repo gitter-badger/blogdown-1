@@ -15,11 +15,13 @@
     {
       "title": "Chinchilla",
       "addToMenu": true
-    }, {
+    },
+    {
       "title": "Subscribe",
       "format": "html",
       "addToMenu": true
-    }, {
+    },
+    {
       "title": "Resume",
       "addToMenu": true
     }
@@ -29,14 +31,17 @@
       "title": "Home",
       "addToMenu": true,
       "redirect": false
-    }, {
+    },
+    {
       "title": "Posts",
       "addToMenu": true
-    }, {
-      "title": "Contact",
-      "addToMenu": true
-    }, {
+    },
+    {
       "title": "Search",
+      "addToMenu": true
+    },
+    {
+      "title": "Contact",
       "addToMenu": true
     }
   ],

@@ -27,6 +27,10 @@
         <page-soft page="[[softPage]]"></page-soft>
     </template>
     
+    <template is="dom-if" if="[[_isEqual(route, 'customhard')]]" restamp>
+        <page-customhard page="[[customhardPage]]"></page-customhard>
+    </template>
+    
     <template is="dom-if" if="[[_isEqual(route, 'post')]]" restamp>
        <page-post post="[[post]]"></page-post>
     </template>
@@ -156,9 +160,13 @@
           var validPage = false;
           for (var i = 0; i < app.pages.length; i++) {
             if (this.routeData.slugs.page === app.pages[i].slug) {
-              if (app.pages[i].type === 'hard') { // Hard page
+              if (app.pages[i].type === 'permanent-hard') { // Permanant hard page
                 this.set('route', this.routeData.slugs.page);
                 this._loadElement(this.routeData.slugs.page);
+              } else if (app.pages[i].type === 'custom-hard') { // Custom hard page
+                this.set('customhardPage', app.pages[i]);
+                this.set('route', 'customhard');
+                this._loadElement('customhard');
               } else { // Soft page
                 this.set('softPage', app.pages[i]);
                 this.set('route', 'soft');
@@ -212,7 +220,6 @@
               app.debug('WARNING: page-' + name + '.html import failed to load');
               app.toast('WARNING: page-' + name + '.html import failed to load');
           }.bind(this));
-          
         },
         
         _isEqual: function(a, b) {
