@@ -25,12 +25,12 @@
         },
         
         _loadElement: function(name) {
-          this.importHref('../content/pages/page-' + name + '.hard.html', function() {
-            app.debug('page-' + name + '.html was imported.');
+          this.importHref('../content/pages/' + name + '.hard', function() {
+            app.debug(name + '.hard was imported.');
           }.bind(this), function() {
               window.history.back();
-              app.debug('WARNING: page-' + name + '.html import failed to load');
-              app.toast('WARNING: page-' + name + '.html import failed to load');
+              app.debug('WARNING: ' + name + '.hard import failed to load');
+              app.toast('WARNING: ' + name + '.hard import failed to load');
           }.bind(this));
         }
       });
